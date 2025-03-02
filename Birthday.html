@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Birthday Wisher</title>
+    <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+    --primary: #ff69b4;
+    --secondary: #8a2be2;
+    --accent: #ff4500;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--secondary), var(--primary), var(--accent));
+    background-size: 400% 400%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: gradientBG 15s ease infinite;
+    overflow: hidden;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+}
+
+#creator, #card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#creator.active, #card.active {
+    display: block;
+}
+
+.title {
+    color: var(--secondary);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    background: linear-gradient(45deg, var(--secondary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleGlow 2s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 20px rgba(138, 43, 226, 0.5); }
+    50% { text-shadow: 0 0 40px rgba(255, 105, 180, 0.8); }
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+input[type="text"] {
+    padding: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+    transform: scale(1.02);
+}
+
+.photo-upload {
+    position: relative;
+}
+
+#photoInput {
+    display: none;
+}
+
+.upload-btn {
+    display: block;
+    padding: 1rem;
+    background: linear-gradient(45deg, var(--secondary), var(--primary));
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.create-btn, .share-btn, .download-btn, .reset-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, var(--secondary), var(--primary));
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.create-btn:hover, .share-btn:hover, .download-btn:hover, .reset-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
+}
+
+.birthday-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-content {
+    position: relative;
+    z-index: 1;
+}
+
+.photo-frame {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid var(--primary);
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+    animation: pulseGlow 3s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 30px rgba(255, 105, 180, 0.5); }
+    50% { box-shadow: 0 0 50px rgba(138, 43, 226, 0.8); }
+}
+
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: zoomInOut 10s infinite;
+}
+
+@keyframes zoomInOut {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.recipient-name {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--secondary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: colorShift 5s infinite;
+}
+
+@keyframes colorShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(30deg); }
+}
+
+.wish-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: #444;
+    animation: fadeInUp 1s ease-out;
+}
+
+.card-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.sparkles span {
+    position: absolute;
+    pointer-events: none;
+    animation: sparkleFloat 4s ease-in-out infinite;
+    opacity: 0;
+}
+
+@keyframes sparkleFloat {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(100px, -100px) rotate(360deg); opacity: 0; }
+}
+
+.floating-balloons span {
+    position: absolute;
+    animation: floatBalloon 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    opacity: 0;
+}
+
+@keyframes floatBalloon {
+    0% { 
+        transform: translateY(100vh) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { 
+        transform: translateY(-100vh) rotate(360deg) translateX(calc(50px * var(--direction)));
+        opacity: 0;
+    }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card-actions {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <div id="creator" class="active">
+            <h1 class="title">Create Birthday Wish</h1>
+            <div class="input-group">
+                <input type="text" id="recipientName" placeholder="Enter Name" required>
+                <div class="photo-upload">
+                    <input type="file" id="photoInput" accept="image/*">
+                    <label for="photoInput" class="upload-btn">
+                        <span>Upload Photo</span>
+                        <small>(optional)</small>
+                    </label>
+                </div>
+                <button onclick="createCard()" class="create-btn">Create Magic ✨</button>
+            </div>
+        </div>
+
+        <div id="card" class="birthday-card">
+            <div class="card-content">
+                <div class="sparkles"></div>
+                <div class="photo-frame">
+                    <img id="uploadedPhoto" src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=500&auto=format&fit=crop&q=60" alt="Birthday Person">
+                </div>
+                <h2 class="recipient-name"></h2>
+                <div class="wish-text">
+                    <p>May your day be filled with joy, laughter, and countless magical moments! 🎉</p>
+                </div>
+                <div class="floating-balloons"></div>
+            </div>
+            <div class="card-actions">
+                <button onclick="shareCard()" class="share-btn">Share 🔗</button>
+                <button onclick="downloadCard()" class="download-btn">Download 💝</button>
+                <button onclick="resetCard()" class="reset-btn">Make Another ✨</button>
+            </div>
+        </div>
+    </div>
+    <script>
+// Create dynamic sparkles
+function createSparkles() {
+    const sparklesContainer = document.querySelector('.sparkles');
+    sparklesContainer.innerHTML = '';
+    const sparkleCount = window.innerWidth < 480 ? 15 : 30;
+    
+    for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement('span');
+        sparkle.textContent = '✨';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = Math.random() * 4 + 's';
+        sparkle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+        sparklesContainer.appendChild(sparkle);
+    }
+}
+
+// Create floating balloons
+function createBalloons() {
+    const balloonsContainer = document.querySelector('.floating-balloons');
+    balloonsContainer.innerHTML = '';
+    const balloonEmojis = ['🎈', '🎂', '🎉', '🎊', '🌟'];
+    const balloonCount = window.innerWidth < 480 ? 8 : 15;
+    
+    for (let i = 0; i < balloonCount; i++) {
+        const balloon = document.createElement('span');
+        balloon.textContent = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+        balloon.style.left = Math.random() * 100 + '%';
+        balloon.style.animationDelay = Math.random() * 6 + 's';
+        balloon.style.fontSize = (Math.random() * 20 + 20) + 'px';
+        balloon.style.setProperty('--direction', Math.random() > 0.5 ? 1 : -1);
+        balloonsContainer.appendChild(balloon);
+    }
+}
+
+// Handle card creation with enhanced animations
+function createCard() {
+    const name = document.getElementById('recipientName').value.trim();
+    if (!name) {
+        alert('Please enter a name!');
+        return;
+    }
+
+    document.querySelector('.recipient-name').textContent = `Happy Birthday, ${name}! 🎉`;
+    document.getElementById('creator').classList.remove('active');
+    
+    // Add a slight delay for the card appearance
+    setTimeout(() => {
+        document.getElementById('card').classList.add('active');
+        createSparkles();
+        createBalloons();
+        
+        // Recreate animations periodically
+        setInterval(() => {
+            createSparkles();
+            createBalloons();
+        }, 6000);
+    }, 300);
+}
+// Handle photo upload with preview animation
+document.getElementById('photoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('uploadedPhoto');
+            img.style.opacity = '0';
+            img.src = e.target.result;
+            img.onload = function() {
+                img.style.transition = 'opacity 0.5s ease-in-out';
+                img.style.opacity = '1';
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Enhanced share functionality
+async function shareCard() {
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: 'Birthday Wish',
+                text: `Check out this birthday wish!`,
+                url: window.location.href
+            });
+        } else {
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            
+            // Enhanced feedback
+            const btn = document.querySelector('.share-btn');
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copied!';
+            btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+    } catch (err) {
+        console.error('Error sharing:', err);
+        alert('Unable to share. Please try again!');
+    }
+}
+
+// Download functionality with feedback
+function downloadCard() {
+    const btn = document.querySelector('.download-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '⌛ Processing...';
+    btn.style.opacity = '0.7';
+
+    html2canvas(document.querySelector('.birthday-card')).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'birthday-wish.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        
+        btn.textContent = '✓ Downloaded!';
+        btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+        
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.style.opacity = '1';
+        }, 2000);
+    });
+}
+
+// Reset card with smooth transitions
+function resetCard() {
+    const card = document.getElementById('card');
+    card.style.opacity = '0';
+    
+    setTimeout(() => {
+        document.getElementById('recipientName').value = '';
+        document.getElementById('uploadedPhoto').src = 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=500&auto=format&fit=crop&q=60';
+        card.classList.remove('active');
+        document.querySelector('.sparkles').innerHTML = '';
+        document.querySelector('.floating-balloons').innerHTML = '';
+        
+        document.getElementById('creator').style.opacity = '0';
+        document.getElementById('creator').classList.add('active');
+        
+        requestAnimationFrame(() => {
+            document.getElementById('creator').style.opacity = '1';
+        });
+    }, 300);
+}
+
+// Initialize animations on window resize
+window.addEventListener('resize', () => {
+    if (document.getElementById('card').classList.contains('active')) {
+        createSparkles();
+        createBalloons();
+    }
+});
+</script>
+</body>
+</html>
